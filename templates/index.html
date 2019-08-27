@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Tapway Face App ..</title>
+
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+
+</head>
+
+<body style="background-color: black; color: white !improtant">
+
+    <div class="container">
+        <div class="header">
+            <nav>
+                <ul class="nav nav-pills pull-right">
+                    <li role="presentation" class="active"><a href="#"></a>
+                    </li>
+                </ul>
+            </nav>
+   <!--          <h3 class="text-muted">Tapway Face App</h3> -->
+        </div>
+
+        <div class="jumbotron-s" >
+
+            <div style="float:center; margin-top:80px" class="postread">
+            <h1  class="bg-dark text-white"></h1>
+                <center><img src="/static/images/D.jpg" width="1100"> </img></center>
+            </div>
+
+             <!-- <div style="width:300px, float:center">
+                <h1>NA</h1>
+                 <center><img src="" width="400"> </img></center>
+             </div> -->
+
+
+            <p class="lead"></p>
+<!--            <p><a class="btn btn-lg btn-success" href="showSignUp" role="button">Sign up today</a>-->
+<!--            </p>-->
+        </div>
+
+        <div class="row marketing">
+            <ul></ul>
+      <!--           <li>A - Male or female aged 20-40</li>
+                <li> B- Male and Female (age 20-40)</li>
+                <li>C- Male or female (age > 40)</li>
+                <li> D - Male and female (age > 40) </li>
+                <li> E - Any combination of Male and female in a group of 3-5 pax </li>
+              <ul> -->
+
+        </div>
+
+     <!--    <footer class="footer">
+            <p> Tapway Face Recognition App &copy; Company 2019</p>
+        </footer> -->
+
+    </div>
+
+<script>
+
+    $( document ).ready(function() {
+
+        var api_url = "http://127.0.0.1:3030/data/test/group/demographics"
+        var pictureUrl = "/static/images/"
+
+        var interval = setInterval(function() {
+
+            $.ajax({
+                url: api_url,
+                contentType: "application/json",
+                dataType: 'json',
+                success: function(result){
+
+                var person = {A:"Male", B:"Female", C:"group"};
+
+
+                    if(result.data.items_found > 0 ) {
+                        console.log(result.data.group);
+                       $('.postread h1').text(person[result.data.group]);
+                       $("img").attr('src', pictureUrl + result.data.group + ".jpg")
+                       var count_d = 20 ;
+
+                       // setTimeout(function(){
+                       //          // wait 20 sec
+                       // },20000)
+                       //clearInterval(interval); // stop the interval
+                    } else {
+
+                           $('.postread h1').text('');
+                           $("img").attr('src', pictureUrl + "D.jpg")
+                    }
+
+
+                }
+            })
+
+        }, 5000);
+
+    });
+
+</script>
+</body>
+
+</html>

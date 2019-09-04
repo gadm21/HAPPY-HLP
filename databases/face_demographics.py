@@ -93,32 +93,6 @@ class face_demographics():
         elif 56 <= age:
             return "56+"
 
-    def commulitive_data(self, item):
-
-        age_range = self.get_age_range(int(item['age']))
-
-        self.age_distro[str(age_range)] += 1
-
-        if item['gender'] == '2':
-            self.gender_distro['female'] += 1
-
-        if item['gender'] == '1':
-            self.gender_distro['male'] += 1
-
-        self.emotion['smile'] = self.emotion['smile'] + 1 if item['emotion'] == "0" else self.emotion['smile']
-        self.emotion['anger'] = self.emotion['anger'] + 1 if item['emotion'] == "1" else self.emotion['anger']
-        self.emotion['sadness'] = self.emotion['sadness'] + 1 if item['emotion'] == "2" else self.emotion[
-            'sadness']
-        self.emotion['disgust'] = self.emotion['disgust'] + 1 if item['emotion'] == "3" else self.emotion[
-            'disgust']
-        self.emotion['fear'] = self.emotion['fear'] + 1 if item['emotion'] == "4" else self.emotion['fear']
-        self.emotion['surprised'] = self.emotion['surprised'] + 1 if item['emotion'] == "5" else self.emotion[
-            'surprised']
-        self.emotion['normal'] = self.emotion['normal'] + 1 if item['emotion'] == "6" else self.emotion['normal']
-        self.emotion['laughs'] = self.emotion['laughs'] + 1 if item['emotion'] == "7" else self.emotion['laughs']
-        self.emotion['happy'] = self.emotion['happy'] + 1 if item['emotion'] == "8" else self.emotion['happy']
-        self.emotion['confused'] = self.emotion['confused'] + 1 if item['emotion'] == "9" else self.emotion['confused']
-        self.emotion['screams'] = self.emotion['screams'] + 1 if item['emotion'] == "10" else self.emotion['screams']
 
 
 
@@ -127,13 +101,28 @@ class face_demographics():
         gender_f = 0
         gender_m = 0
 
-        for gen in data :
-            print('items found ....test ***')
-            print(gen)
-            if int(gen['gender']) == 1 :
+        age_groups = {
+            '20-50': 0,
+            '50+': 0
+        }
+
+        age_gender = {}
+
+        data_len = len(data)
+
+        for gen in data:
+
+            # define gender
+            if int(gen['gender']) == 1:
                 gender_m = gender_m + 1
-            elif int(gen['gender']) == 2 :
+            elif int(gen['gender']) == 2:
                 gender_f = gender_f + 1
+
+            #define age
+            if 20 <= int(gen['age']) <= 50:
+                age_groups[0] = age_groups[0] + 1
+            elif int(gen['age']) > 50:
+                age_groups[1] = age_groups[1] + 1
 
         # Male
 
@@ -142,12 +131,31 @@ class face_demographics():
         print('M gender count ..')
         print(gender_m)
 
-        if gender_m == len(data) :
-            return "A"
-        elif gender_f == len(data) :
-            return "B"
-        elif gender_f is not 0 and gender_m is not 0:
-            return "C"
+
+        # check for 1 pax
+        if (gender_m == data_len or gender_f == data_len) :
+            if age_groups[0] == data_len:
+                print(' one Face ')
+                return "A"
+            elif age_groups[1] == data_len:
+                    print(' one Face ')
+                    return "C"
+
+        # check for 2 pax or more
+        elif (gender_m + gender_f == data_len) :
+            if age_groups[0] == data_len :
+                return "B"
+            elif age_groups[1] == data_len:
+                return "D"
+
+
+            #
+            # elif age_groups['20-50'] < data_len and age_groups['50+'] < data_len and age_groups['20-50'] is not 0 and age_groups['50+'] is not 0 :
+            #     return "E"
+
+
+
+
 
 
 
@@ -188,13 +196,15 @@ class face_demographics():
         c_timestamp = int(time.mktime(currentTime.timetuple()))
         yesterdayTime = datetime.now() - timedelta(seconds=10)
         y_timestamp = int(time.mktime(yesterdayTime.timetuple()))
-        records_num = 5  # grep 4 rec from each camera every 10sec
+        records_num = 5  # grep 3 rec from each camera every 10sec
 
         channelIds = [
             "1000000$1$0$0"
         ]
 
-        response = tasks_app.face_detection_api(c_timestamp, y_timestamp, records_num, channelIds)
+        #response = tasks_app.face_detection_api(c_timestamp, y_timestamp, records_num, channelIds)
+        response = tasks_app.face_detection_api(c_timestamp, y_timestamp , records_num, channelIds)
+
         data_dict = {}
         group_detecion = 'N/A'
         if 'data' in response.json():

@@ -10,7 +10,7 @@ from pytz import timezone
 import operator
 from time import mktime
 import random
-
+import config
 
 import requests
 import hashlib
@@ -24,10 +24,10 @@ from pytz import timezone
 def db_connection():
     # # Connect to production database
     mydb = mysql.connector.connect(
-        host="tapway-dahua.cufrbzihxsda.ap-southeast-1.rds.amazonaws.com",
-        user="radius",
-        passwd="radtapway",
-        database="dahuadb_face",
+        host=config.host,
+        user=config.user,
+        passwd=config.passwd,
+        database=config.database,
     )
 
     # mydb = mysql.connector.connect(
@@ -41,13 +41,13 @@ def db_connection():
     return mydb, db_cursor
 
 
-#domainip = 'http://tapwayoffice.duckdns.org/admin/API'
-domainip = 'http://192.168.0.50/admin/API'
-username = "system"
-password = "GoTapway123#"
+domainip = config.domainip
+#domainip = 'http://192.168.0.50/admin/API'
+username = config.username
+password = config.passwd
 
 # Global variable: token for login authorization
-TOKEN = {"token": "", "randomkey": "", "signature": ""}
+TOKEN = config.TOKEN
 connect_timeout, read_timeout = 5.0, 30.0
 
 

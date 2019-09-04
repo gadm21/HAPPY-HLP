@@ -44,7 +44,7 @@ def db_connection():
 domainip = config.domainip
 #domainip = 'http://192.168.0.50/admin/API'
 username = config.username
-password = config.passwd
+password = config.password
 
 # Global variable: token for login authorization
 TOKEN = config.TOKEN

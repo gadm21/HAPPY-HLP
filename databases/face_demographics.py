@@ -123,9 +123,9 @@ class face_demographics():
 
             #define age
             if 20 <= int(gen['age']) <= 45:
-                age_groups[0] = age_groups[0] + 1
+                age_groups.keys()[0] = age_groups.keys()[0] + 1
             elif int(gen['age']) > 45:
-                age_groups[1] = age_groups[1] + 1
+                age_groups.keys()[1] = age_groups.keys()[1] + 1
 
         # Male
 

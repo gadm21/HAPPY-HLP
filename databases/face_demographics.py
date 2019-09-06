@@ -152,7 +152,7 @@ class face_demographics():
         # check for 2 pax
 
         elif len(number_of_faces) == 2:
-            if gender_m + gender_f == data_len:
+            if (gender_m + gender_f == data_len) and (gender_m is not 0) and (gender_f is not 0 ):
                 if age_groups['20-45'] == data_len:
                     return "B"
                 elif age_groups['45+'] == data_len:

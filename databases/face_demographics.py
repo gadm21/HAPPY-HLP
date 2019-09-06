@@ -123,9 +123,9 @@ class face_demographics():
 
             #define age
             if 20 <= int(gen['age']) <= 45:
-                age_groups.keys()[0] = age_groups.keys()[0] + 1
+                age_groups['20-45'] = age_groups['20-45'] + 1
             elif int(gen['age']) > 45:
-                age_groups.keys()[1] = age_groups.keys()[1] + 1
+                age_groups['45+'] = age_groups['45+'] + 1
 
         # Male
 
@@ -135,32 +135,34 @@ class face_demographics():
         print(gender_m)
 
         number_of_faces = list(set(age_ranges))
+        print('number of faces ')
+        print(len(number_of_faces))
 
         # check for 1 pax
 
-        if number_of_faces == 1:
+        if len(number_of_faces) == 1:
             if gender_m == data_len or gender_f == data_len:  #male or female
-                    if age_groups[0] == data_len:
+                    if age_groups['20-45'] == data_len:
                         print(' one Face ')
                         return "A"
-                    elif age_groups[1] == data_len:
+                    elif age_groups['45+'] == data_len:
                             print(' one Face ')
                             return "C"
 
         # check for 2 pax
 
-        elif number_of_faces == 2:
+        elif len(number_of_faces) == 2:
             if gender_m + gender_f == data_len:
-                if age_groups[0] == data_len :
+                if age_groups['20-45'] == data_len:
                     return "B"
-                elif age_groups[1] == data_len:
+                elif age_groups['45+'] == data_len:
                     return "D"
 
             else:  # 2 male or 2 female
                 return "F"
 
         # check for froups
-        elif number_of_faces > 2:
+        elif len(number_of_faces) > 2:
             if gender_m + gender_f == data_len: #group of diffrent gender kind male and female
                 return "E"
 
@@ -175,7 +177,7 @@ class face_demographics():
         # get last hour data
         currentTime = datetime.now()
         c_timestamp = int(time.mktime(currentTime.timetuple()))
-        yesterdayTime = datetime.now() - timedelta(seconds=5)
+        yesterdayTime = datetime.now() - timedelta(seconds=10)
         y_timestamp = int(time.mktime(yesterdayTime.timetuple()))
         records_num = 5  # grep 3 rec from each camera every 10sec
 

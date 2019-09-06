@@ -74,12 +74,20 @@
                 dataType: 'json',
                 success: function(result){
 
-                var person = {A:"Male", B:"Female", C:"group"};
+                var person = {
+                    A:"Male or female aged 20-45",
+                    B:"Male and Female (age 20-45)",
+                    C:"Male or female (age > 45)" , D:"Male and female (age > 45)",
+                    E: "Any combination of Male and female in a group of >3 pax " ,
+                    F: "Any combination of male and/or female in a group of 1 or 2 pax not covered by cases A to D"
+
+                 };
 
 
                     if(result.data.items_found > 0 ) {
                         console.log(result.data.group);
                        $('.postread h1').text(person[result.data.group]);
+
                        //$("img").attr('src', pictureUrl + result.data.group + ".jpg")
                        var count_d = 20 ;
 
@@ -97,7 +105,7 @@
                 }
             })
 
-        }, 5000);
+        }, 3000);
 
     });
 

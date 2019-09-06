@@ -163,7 +163,7 @@ class face_demographics():
 
         # check for froups
         elif len(number_of_faces) > 2:
-            if gender_m + gender_f == data_len: #group of diffrent gender kind male and female
+            if (gender_m + gender_f == data_len) and (gender_m is not 0) and (gender_f is not 0 ):  #group of diffrent gender kind male and female
                 return "E"
 
             else :  # group of same kind of gender

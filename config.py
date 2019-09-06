@@ -1,6 +1,6 @@
 
 #domainip = 'http://tapwayoffice.duckdns.org/admin/API'
-domainip = 'http://192.168.0.2/admin/API'
+domainip = 'http://192.168.0.50/admin/API'
 username = "system"
 password = "GoTapway123#"
 

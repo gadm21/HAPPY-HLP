@@ -177,7 +177,7 @@ class face_demographics():
         # get last hour data
         currentTime = datetime.now()
         c_timestamp = int(time.mktime(currentTime.timetuple()))
-        yesterdayTime = datetime.now() - timedelta(seconds=10)
+        yesterdayTime = datetime.now() - timedelta(seconds=20)
         y_timestamp = int(time.mktime(yesterdayTime.timetuple()))
         records_num = 5  # grep 3 rec from each camera every 10sec
 

@@ -4,3 +4,4 @@ pytz==2019.1
 requests==2.21.0
 Flask==1.0.2
 mysql-connector
+auto-py-to-exe

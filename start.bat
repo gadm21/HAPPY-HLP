@@ -1,1 +1,1 @@
-C:\Users\pc\AppData\Local\Programs\Python\Python37\python.exe app.py %*
+C:\Users\tapway\AppData\Local\Programs\Python\Python37-32\python.exe app.py %*

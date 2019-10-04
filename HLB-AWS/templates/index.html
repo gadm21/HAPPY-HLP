@@ -28,7 +28,19 @@
 
             <div style="float:center; margin-top:80px" class="postread">
             <h1  class="bg-dark text-white"></h1>
-                <center><img src="/static/images/D.jpg" width="1100"> </img></center>
+
+                <center><img id="imgadv" src="/static/images/H.jpg" width="1100"> </img></center>
+            </div>
+            <div >
+
+
+
+                 <center>
+
+                    <h4  class="text-white"></h4> .. <h3  class="text-yellow"></h3>
+                  <img id="thumbimg" src="/static/snapshot.jpg" width="150"> </img> 
+
+                 </center>
             </div>
 
              <!-- <div style="width:300px, float:center">
@@ -65,8 +77,23 @@
 
         var api_url = "http://127.0.0.1:3030/data/test/group/demographics"
         var pictureUrl = "/static/images/"
+        var count_d = 1 ;
+
+        setTimeout(function(){
+
+        count_d++ ;
+        $('h3').text(count_d);
+
+        // wait 20 sec
+        },1000);
+
+
+    
+
 
         var interval = setInterval(function() {
+            $('h3').text('');
+            count_d = 1 ;
 
             $.ajax({
                 url: api_url,
@@ -74,40 +101,45 @@
                 dataType: 'json',
                 success: function(result){
 
-                var person = {
-                    A:"Male or female aged 20-45",
-                    B:"Male and Female (age 20-45)",
-                    C:"Male or female (age > 45)" , D:"Male and female (age > 45)",
-                    E: "Any combination of Male and female in a group of >3 pax " ,
-                    F: "Any combination of male and/or female in a group of 1 or 2 pax not covered by cases A to D"
+                    $('h4').text(result.detection);
+                    
 
-                 };
+                    var person = {
+                        A:"Male or Female aged 20-45",
+                        B:"Male and Female (age 20-45)",
+                        C:"Male or Female (age > 45)" ,
+                        D:"Male and Female (age > 45)",
+                        E: "group of > 2 pax " ,
+                        F: "2 Male or 2 Female"
+                        H: "Default"
+
+                     };
+                    
+                    var snap_img = "/" + result.image + '?' + (new Date()).getTime() ;
+                    $("#thumbimg").attr({"src": snap_img});
+                    
+
+                    if(result.items_found  > 0 ) {
+                       console.log(result.group);
+                       $('.postread h1').text(person[result.group]);
+                       var adv_img = pictureUrl + result.group + ".jpg"  ;
+
+                       $("#imgadv").attr({"src": adv_img} );
 
 
-                    if(result.data.items_found > 0 ) {
-                        //console.log(result.data.group);
-                       $('.postread h1').text(person[result.data.group]);
-
-                       $("img").attr('src', pictureUrl + result.data.group + ".jpg")
-                       var count_d = 20 ;
-
-// <!--                       setTimeout(function(){-->
-
-// <!--                                // wait 20 sec-->
-// <!--                       },20000)-->
 
                        //clearInterval(interval); // stop the interval
-                    } else {
+                    } else  {
 
-                           //$('.postread h1').text('');
-                           //$("img").attr('src', pictureUrl + "D.jpg")
+                           $('.postread h1').text('');
+                           $("#imgadv").attr('src', pictureUrl + "F.jpg")
                     }
 
 
                 }
             })
 
-        }, 1000);
+        }, 5000);
 
     });
 

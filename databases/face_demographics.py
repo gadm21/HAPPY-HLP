@@ -6,8 +6,10 @@ from datetime import datetime
 
 import requests
 import time
-
 import json
+import csv
+
+
 
 class face_demographics():
 
@@ -93,7 +95,11 @@ class face_demographics():
         elif 56 <= age:
             return "56+"
 
-
+    def create_csv_file(self, row):
+        with open('report/groups.csv', 'a') as csvFile:
+            writer = csv.writer(csvFile)
+            writer.writerow(row)
+        csvFile.close()
 
 
     def define_group(self, data):
@@ -110,11 +116,14 @@ class face_demographics():
 
         data_len = len(data)
         age_ranges = []
+        age_gender_list = []
+
 
         for gen in data:
+            # for csv file
+            age_gender_list.append(['', gen['gender'], gen['age'], ''])
 
             age_ranges.append(gen['age'])
-
             # define gender
             if int(gen['gender']) == 1:
                 gender_m = gender_m + 1
@@ -127,8 +136,10 @@ class face_demographics():
             elif int(gen['age']) > 45:
                 age_groups['45+'] = age_groups['45+'] + 1
 
-        # Male
 
+
+
+        # Male
         print('F gender count ..')
         print(gender_f)
         print('M gender count ..')
@@ -138,15 +149,32 @@ class face_demographics():
         print('number of faces ')
         print(len(number_of_faces))
 
+
+
+
         # check for 1 pax
 
         if len(number_of_faces) == 1:
             if gender_m == data_len or gender_f == data_len:  #male or female
                     if age_groups['20-45'] == data_len:
-                        print(' one Face ')
+
+                        now = datetime.now()
+                        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+                        row = ['A', 'Gender', 'Age', dt_string]
+                        row.append(age_gender_list)
+                        self.create_csv_file(row)
+
                         return "A"
+
                     elif age_groups['45+'] == data_len:
+
                             print(' one Face ')
+                            now = datetime.now()
+                            dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+                            row = ['C', 'Gender', 'Age', dt_string]
+                            row.append(age_gender_list)
+                            self.create_csv_file(row)
+
                             return "C"
 
         # check for 2 pax
@@ -154,19 +182,54 @@ class face_demographics():
         elif len(number_of_faces) == 2:
             if (gender_m + gender_f == data_len) and (gender_m is not 0) and (gender_f is not 0 ):
                 if age_groups['20-45'] == data_len:
+
+                    now = datetime.now()
+                    dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+                    row = ['B', 'Gender', 'Age', dt_string]
+                    row.append(age_gender_list)
+                    self.create_csv_file(row)
+
                     return "B"
                 elif age_groups['45+'] == data_len:
+
+                    now = datetime.now()
+                    dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+                    row = ['D', 'Gender', 'Age', dt_string]
+                    row.append(age_gender_list)
+                    self.create_csv_file(row)
+
                     return "D"
 
             else:  # 2 male or 2 female
+
+                now = datetime.now()
+                dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+                row = ['F', 'Gender', 'Age', dt_string]
+                row.append(age_gender_list)
+                self.create_csv_file(row)
+
                 return "F"
 
         # check for froups
         elif len(number_of_faces) > 2:
             if (gender_m + gender_f == data_len) and (gender_m is not 0) and (gender_f is not 0 ):  #group of diffrent gender kind male and female
+
+                now = datetime.now()
+                dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+                row = ['E', 'Gender', 'Age', dt_string]
+                row.append(age_gender_list)
+                self.create_csv_file(row)
+
                 return "E"
 
             else :  # group of same kind of gender
+
+                now = datetime.now()
+                dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+                row = ['F', 'Gender', 'Age', dt_string]
+                row.append(age_gender_list)
+                self.create_csv_file(row)
+
                 return "F"
 
 

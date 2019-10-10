@@ -36,8 +36,8 @@
 
 
                  <center>
-
-                    <h4  class="text-white"></h4> .. <h3  class="text-yellow"></h3>
+					<h3  class="text-white"></h3>
+                    <h4  class="text-white"></h4> 
                   <img id="thumbimg" src="/static/snapshot.jpg" width="150"> </img> 
 
                  </center>
@@ -77,9 +77,9 @@
 
         var api_url = "http://127.0.0.1:3030/data/test/group/demographics"
         var pictureUrl = "/static/images/"
-        var count_d = 1 ;
+        var count_d = 0 ;
 
-        setTimeout(function(){
+        var counter = setInterval(function() {
 
         count_d++ ;
         $('h3').text(count_d);
@@ -92,8 +92,8 @@
 
 
         var interval = setInterval(function() {
-            $('h3').text('');
-            count_d = 1 ;
+          
+            
 
             $.ajax({
                 url: api_url,
@@ -102,15 +102,15 @@
                 success: function(result){
 
                     $('h4').text(result.detection);
-                    
-
+                    // $('.postread h1').text(person[result.group]);
+                    count_d = 0 ;
                     var person = {
                         A:"Male or Female aged 20-45",
                         B:"Male and Female (age 20-45)",
                         C:"Male or Female (age > 45)" ,
                         D:"Male and Female (age > 45)",
-                        E: "group of > 2 pax " ,
-                        F: "2 Male or 2 Female"
+                        E: "group of > 2 Faces " ,
+                        F: "2 Male or 2 Female",
                         H: "Default"
 
                      };
@@ -139,7 +139,7 @@
                 }
             })
 
-        }, 5000);
+        }, 3000);
 
     });
 

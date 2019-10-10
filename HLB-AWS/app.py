@@ -4,6 +4,9 @@ import json
 from datetime import timedelta
 from datetime import datetime
 from datetime import date
+import os.path
+from os import path
+
 
 import uuid
 
@@ -35,13 +38,19 @@ def get_avg_age(h, l):
 
 def create_csv_file(row):
     today = date.today()
-    d3 = today.strftime("%d/%m-%Y")
+    d3 = today.strftime("%d-%m-%Y")
+    csv_file = 'report/report-'+ d3 +'.csv'
+    if(path.exists(csv_file)):
+        with open(csv_file, 'a') as csvFile:
+            writer = csv.writer(csvFile)
+            writer.writerow(row)
+        csvFile.close()
+    else:
+        with open(csv_file, 'w') as csvFile:
+            writer = csv.writer(csvFile)
+            writer.writerow(row)
+        csvFile.close()
 
-
-    with open('report/'+ d3 +'.csv', 'a') as csvFile:
-        writer = csv.writer(csvFile)
-        writer.writerow(row)
-    csvFile.close()
 
 def get_images():
     try:

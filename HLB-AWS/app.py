@@ -141,7 +141,7 @@ def detect_faces():
         if number_of_faces > 0:
             for gen in response['FaceDetails']:
 
-                if int(gen['Confidence']) > 80:
+                if int(gen['Confidence']) > 90:
 
                     # print('The detected face is between ' + str(faceDetail['AgeRange']['Low'])
                     #       + ' and ' + str(faceDetail['AgeRange']['High']) + ' years old')
@@ -149,13 +149,15 @@ def detect_faces():
                     # print(json.dumps(gen, indent=4, sort_keys=True))
                     age = 0
                     if 'AgeRange' in gen:
-                        age = get_avg_age(gen['AgeRange']['High'], gen['AgeRange']['Low'])
-
+                        #age = get_avg_age(gen['AgeRange']['High'], gen['AgeRange']['Low'])
+                        age = int(gen['AgeRange']['High'])
                     gender = 'N/A'
                     if 'Gender' in gen:
                         gender = gen['Gender']['Value']
 
-                    data_results = data_results + json.dumps([gender, age], indent=4, sort_keys=True) + '\n'
+                    data_results = data_results + json.dumps([gender, 
+                    	int(gen['AgeRange']['Low']), 
+                    	int(gen['AgeRange']['High'])], indent=4, sort_keys=True) + '\n'
 
 
                     # for csv tsk

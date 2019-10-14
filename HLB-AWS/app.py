@@ -217,6 +217,9 @@ def detect_faces():
                         create_csv_file(row)
 
                         return number_of_faces , "D", img_filename, data_results
+                    
+                    else :
+                        return number_of_faces, "F" , img_filename, data_results
 
                 else:  # 2 male or 2 female
 

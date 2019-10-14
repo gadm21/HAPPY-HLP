@@ -117,7 +117,7 @@ def detect_faces():
         print(e)
 
     response = client.detect_faces(Image={'Bytes': image_base64}, Attributes=['ALL'])
-    if 'FaceDetails' in response :
+    if 'FaceDetails' in response:
         gender_f = 0
         gender_m = 0
 
@@ -141,117 +141,123 @@ def detect_faces():
         if number_of_faces > 0:
             for gen in response['FaceDetails']:
 
+                if int(gen['Confidence']) > 80:
 
-                # print('The detected face is between ' + str(faceDetail['AgeRange']['Low'])
-                #       + ' and ' + str(faceDetail['AgeRange']['High']) + ' years old')
-                # print('Here are the other attributes:')
-                # print(json.dumps(gen, indent=4, sort_keys=True))
-                age = 0
-                if 'AgeRange' in gen:
-                    age = get_avg_age(gen['AgeRange']['High'], gen['AgeRange']['Low'])
+                    # print('The detected face is between ' + str(faceDetail['AgeRange']['Low'])
+                    #       + ' and ' + str(faceDetail['AgeRange']['High']) + ' years old')
+                    # print('Here are the other attributes:')
+                    # print(json.dumps(gen, indent=4, sort_keys=True))
+                    age = 0
+                    if 'AgeRange' in gen:
+                        age = get_avg_age(gen['AgeRange']['High'], gen['AgeRange']['Low'])
 
-                gender = 'N/A'
-                if 'Gender' in gen:
-                    gender = gen['Gender']['Value']
+                    gender = 'N/A'
+                    if 'Gender' in gen:
+                        gender = gen['Gender']['Value']
 
-                data_results = data_results + json.dumps([gender, age], indent=4, sort_keys=True) + '\n'
+                    data_results = data_results + json.dumps([gender, age], indent=4, sort_keys=True) + '\n'
 
 
-                # for csv tsk
-                age_gender_list.append(['', gender, age, ''])
+                    # for csv tsk
+                    age_gender_list.append(['', gender, age, ''])
 
-                # define gender
-                if gender == 'Male':
-                    gender_m = gender_m + 1
-                elif gender == 'Female':
-                    gender_f = gender_f + 1
+                    # define gender
+                    if gender == 'Male':
+                        gender_m = gender_m + 1
+                    elif gender == 'Female':
+                        gender_f = gender_f + 1
 
-                # define age
-                if 20 <= int(age) <= 45:
-                    age_groups['20-45'] = age_groups['20-45'] + 1
-                elif int(age) > 45:
-                    age_groups['45+'] = age_groups['45+'] + 1
+                    # define age
+                    if 20 <= int(age) <= 45:
+                        age_groups['20-45'] = age_groups['20-45'] + 1
+                    elif int(age) > 45:
+                        age_groups['45+'] = age_groups['45+'] + 1
 
-            if number_of_faces == 1:
-                if gender_m == number_of_faces or gender_f == number_of_faces:  # male or female
-                    if age_groups['20-45'] == number_of_faces:
+                    if number_of_faces == 1:
+                        if gender_m == number_of_faces or gender_f == number_of_faces:  # male or female
+                            if age_groups['20-45'] == number_of_faces:
+
+                                now = datetime.now()
+                                dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+                                row = ['A', 'Gender', 'Age', dt_string]
+                                row.append(age_gender_list)
+                                create_csv_file(row)
+
+                                return number_of_faces , "A" , img_filename, data_results
+
+                            elif age_groups['45+'] == number_of_faces:
+
+                                print(' one Face ')
+                                now = datetime.now()
+                                dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+                                row = ['C', 'Gender', 'Age', dt_string]
+                                row.append(age_gender_list)
+                                create_csv_file(row)
+
+                                return number_of_faces, "C" , img_filename, data_results
+
+                    # check for 2 pax
+
+                    elif number_of_faces == 2:
+                        if (gender_m + gender_f == number_of_faces) and (gender_m is not 0) and (gender_f is not 0):
+                            if age_groups['20-45'] == number_of_faces:
+
+                                now = datetime.now()
+                                dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+                                row = ['B', 'Gender', 'Age', dt_string]
+                                row.append(age_gender_list)
+                                create_csv_file(row)
+
+                                return number_of_faces, "B" , img_filename, data_results
+                            elif age_groups['45+'] == number_of_faces:
+
+                                now = datetime.now()
+                                dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+                                row = ['D', 'Gender', 'Age', dt_string]
+                                row.append(age_gender_list)
+                                create_csv_file(row)
+
+                                return number_of_faces , "D", img_filename, data_results
+
+                            else :
+                                return number_of_faces, "H" , img_filename, data_results
+
+                        else:  # 2 male or 2 female
+
+                            # now = datetime.now()
+                            # dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+                            # row = ['F', 'Gender', 'Age', dt_string]
+                            # row.append(age_gender_list)
+                            # create_csv_file(row)
+
+                            return number_of_faces, "F" , img_filename, data_results
+
+                    # check for groups
+                    elif number_of_faces > 2:
 
                         now = datetime.now()
                         dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-                        row = ['A', 'Gender', 'Age', dt_string]
+                        row = ['E', 'Gender', 'Age', dt_string]
                         row.append(age_gender_list)
                         create_csv_file(row)
 
-                        return number_of_faces , "A" , img_filename, data_results
+                        return number_of_faces, "E", img_filename, data_results
 
-                    elif age_groups['45+'] == number_of_faces:
 
-                        print(' one Face ')
-                        now = datetime.now()
-                        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-                        row = ['C', 'Gender', 'Age', dt_string]
-                        row.append(age_gender_list)
-                        create_csv_file(row)
-
-                        return number_of_faces, "C" , img_filename, data_results
-
-            # check for 2 pax
-
-            elif number_of_faces == 2:
-                if (gender_m + gender_f == number_of_faces) and (gender_m is not 0) and (gender_f is not 0):
-                    if age_groups['20-45'] == number_of_faces:
-
-                        now = datetime.now()
-                        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-                        row = ['B', 'Gender', 'Age', dt_string]
-                        row.append(age_gender_list)
-                        create_csv_file(row)
-
-                        return number_of_faces, "B" , img_filename, data_results
-                    elif age_groups['45+'] == number_of_faces:
-
-                        now = datetime.now()
-                        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-                        row = ['D', 'Gender', 'Age', dt_string]
-                        row.append(age_gender_list)
-                        create_csv_file(row)
-
-                        return number_of_faces , "D", img_filename, data_results
-                    
                     else :
-                        return number_of_faces, "F" , img_filename, data_results
 
-                else:  # 2 male or 2 female
+                        # now = datetime.now()
+                        # dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+                        # row = ['F', 'Gender', 'Age', dt_string]
+                        # row.append(age_gender_list)
+                        # create_csv_file(row)
 
-                    # now = datetime.now()
-                    # dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-                    # row = ['F', 'Gender', 'Age', dt_string]
-                    # row.append(age_gender_list)
-                    # create_csv_file(row)
+                        #if no face detected
+                        return number_of_faces, "H", img_filename, data_results
 
-                    return number_of_faces, "F" , img_filename, data_results
-
-            # check for froups
-            elif number_of_faces > 2:
-
-                now = datetime.now()
-                dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-                row = ['E', 'Gender', 'Age', dt_string]
-                row.append(age_gender_list)
-                create_csv_file(row)
-
-                return number_of_faces, "E", img_filename, data_results
-
-
-        else :
-
-            # now = datetime.now()
-            # dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-            # row = ['F', 'Gender', 'Age', dt_string]
-            # row.append(age_gender_list)
-            # create_csv_file(row)
-
-            return number_of_faces, "H", img_filename, data_results
+                else:
+                    # keep on default if the confidence less than 80
+                    return number_of_faces, "H", img_filename, data_results
 
 
 
@@ -261,7 +267,7 @@ def detect_faces():
         # row.append(age_gender_list)
         # create_csv_file(row)
 
-        return number_of_faces, "F", img_filename, data_results
+        return number_of_faces, "H", img_filename, data_results
 
 
 @app.route("/data/test/group/demographics", methods=["GET"])
